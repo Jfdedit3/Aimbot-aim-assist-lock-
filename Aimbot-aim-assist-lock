@@ -142,3 +142,5 @@ UserInputService.InputBegan:Connect(function(input)
         print("Script désactivé.")
     end
 end)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Esp/refs/heads/main/Esp?token=GHSAT0AAAAAACWLJPVNE3PRISM23IQDMCUWZX5RLBA"))()
