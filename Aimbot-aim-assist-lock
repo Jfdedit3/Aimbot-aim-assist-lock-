@@ -143,4 +143,4 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Esp/refs/heads/main/Esp?token=GHSAT0AAAAAACWLJPVNE3PRISM23IQDMCUWZX5RLBA"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Esp/refs/heads/main/Esp"))()
