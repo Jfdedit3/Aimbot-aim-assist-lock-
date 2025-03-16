@@ -5,7 +5,7 @@ if _G.ScriptActive then
     return -- Sortir du script si déjà actif
 end
 
-_G.ScriptActive = true -- Définir la variable pour indiquer que le script est actif
+_G.ScriptActive = true -- Indique que le script est actif
 
 local Config = {
     Fov = 120,
@@ -15,21 +15,24 @@ local Config = {
     TeamCheck = false,
     WallCheck = false,
     LockDistance = 1000,
-    FovColor = Color3.fromRGB(255, 255, 255)
+    FovColor = Color3.fromRGB(255, 255, 255),
+    ShowFovCircle = false -- Changez cette valeur à true si vous souhaitez voir le cercle par défaut
 }
 
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Camera = workspace.CurrentCamera
 
+-- Création du cercle de FOV
 local fovCircle = Drawing.new("Circle")
-fovCircle.Visible = true
+fovCircle.Visible = Config.ShowFovCircle
 fovCircle.Thickness = 1
 fovCircle.Color = Config.FovColor
 fovCircle.Filled = false
 fovCircle.Radius = Config.Fov
 fovCircle.Position = Camera.ViewportSize / 2
 
+-- Indicateur (Triangle)
 local indicator = Drawing.new("Triangle")
 indicator.Visible = false
 indicator.Thickness = 1
@@ -60,7 +63,6 @@ local function WallCheck(player)
         raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
 
         local raycastResult = workspace:Raycast(origin, direction * Config.LockDistance, raycastParams)
-
         return raycastResult == nil
     end
     return false
@@ -130,17 +132,25 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Option pour arrêter le script manuellement
+-- Gestion des entrées utilisateur
 local UserInputService = game:GetService("UserInputService")
-UserInputService.InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.E then -- Appuyer sur "E" pour désactiver le script
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    -- Touche F pour toggle la visibilité du cercle FOV
+    if input.KeyCode == Enum.KeyCode.F then
+        Config.ShowFovCircle = not Config.ShowFovCircle
+        fovCircle.Visible = Config.ShowFovCircle
+        print("FOV Circle visibility toggled: " .. tostring(Config.ShowFovCircle))
+    -- Touche E pour désactiver le script
+    elseif input.KeyCode == Enum.KeyCode.E then
         _G.ScriptActive = false
         fovCircle.Visible = false
         indicator.Visible = false
-        fovCircle:Destroy() -- Utiliser Destroy ici
-        indicator:Destroy() -- Utiliser Destroy ici
+        fovCircle:Destroy()
+        indicator:Destroy()
         print("Script désactivé.")
     end
 end)
 
+-- Chargement d'un script ESP externe (vérifiez si ce script n'ajoute pas un autre cercle blanc)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Esp/refs/heads/main/Esp"))()
